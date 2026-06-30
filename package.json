@@ -17,5 +17,8 @@
   "bugs": {
     "url": "https://github.com/jode401/cabinetdentaire/issues"
   },
-  "homepage": "https://github.com/jode401/cabinetdentaire#readme"
+  "homepage": "https://github.com/jode401/cabinetdentaire#readme",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
 }
