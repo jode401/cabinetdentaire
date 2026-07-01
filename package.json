@@ -1,24 +1,18 @@
 {
-  "name": "cabinet",
+  "name": "maher-registration-backend",
   "version": "1.0.0",
-  "description": "��#\u0000 \u0000c\u0000a\u0000b\u0000i\u0000n\u0000e\u0000t\u0000d\u0000e\u0000n\u0000t\u0000a\u0000i\u0000r\u0000e\u0000\r\u0000 \u0000#\u0000 \u0000c\u0000a\u0000b\u0000i\u0000n\u0000e\u0000t\u0000d\u0000e\u0000n\u0000t\u0000a\u0000i\u0000r\u0000e\u0000\r\u0000 \u0000#\u0000 \u0000c\u0000a\u0000b\u0000i\u0000n\u0000e\u0000t\u0000d\u0000e\u0000n\u0000t\u0000a\u0000i\u0000r\u0000e\u0000\r\u0000 \u0000",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/jode401/cabinetdentaire.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "description": "خادم استقبال تسجيلات ملتقى ماهر الإلكتروني",
+  "main": "server.js",
   "type": "commonjs",
-  "bugs": {
-    "url": "https://github.com/jode401/cabinetdentaire/issues"
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
   },
-  "homepage": "https://github.com/jode401/cabinetdentaire#readme",
   "dependencies": {
-    "express": "^5.2.1"
+    "better-sqlite3": "^11.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "nodemailer": "^6.9.14"
   }
 }
