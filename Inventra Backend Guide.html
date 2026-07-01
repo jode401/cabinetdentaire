@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Inventra — Backend Developer Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Hanken+Grotesque:wght@400;500;600;700&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--ink:#1f2609;--ink2:#4b5630;--ink3:#7c885a;--olive:#799102;--olive-d:#5f7300;--lime:#eefab3;--lime-2:#f4fbd6;--line:#e2e7cf;--paper:#fbfcf4;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:#fff;font-family:'Hanken Grotesque',system-ui,sans-serif;color:var(--ink);font-size:15px;line-height:1.62;}
+  .doc{box-sizing:border-box;max-width:8.5in;margin:0 auto;background:inherit;padding:56px clamp(24px,5vw,0.8in) 96px;}
+  .doc-frame{width:100%;border-collapse:collapse;}
+  .doc-frame td{padding:0;}
+  .pad-top,.pad-bottom{display:none;}
+  h1,h2,h3,h4{font-family:'Bricolage Grotesque',system-ui,sans-serif;text-wrap:balance;letter-spacing:-.02em;line-height:1.1;}
+  h1{font-size:38px;margin:0 0 6px;}
+  h2{font-size:24px;margin:44px 0 12px;padding-top:18px;border-top:2px solid var(--line);}
+  h3{font-size:17px;margin:26px 0 8px;}
+  p,li{text-wrap:pretty;}
+  p{margin:0 0 12px;}
+  ul,ol{margin:0 0 14px;padding-left:22px;}
+  li{margin:0 0 6px;}
+  a{color:var(--olive-d);}
+  code{font-family:'Geist Mono',monospace;font-size:.86em;background:var(--lime-2);border:1px solid var(--line);border-radius:5px;padding:1px 5px;color:var(--olive-d);}
+  .lead{font-size:17px;color:var(--ink2);margin:0 0 8px;}
+  .kicker{font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--olive);font-weight:600;margin-bottom:14px;}
+  .callout{background:var(--lime-2);border:1px solid var(--line);border-left:4px solid var(--olive);border-radius:12px;padding:16px 18px;margin:16px 0;}
+  .callout.warn{background:#fdf6e3;border-left-color:#b8860b;}
+  .callout .t{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:15px;margin-bottom:4px;}
+  .callout p{margin:0;font-size:14px;color:var(--ink2);}
+  table.d{width:100%;border-collapse:collapse;margin:14px 0 18px;font-size:13.5px;}
+  table.d th{background:var(--olive);color:#fff;text-align:left;padding:9px 11px;font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;font-weight:500;}
+  table.d td{padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top;}
+  table.d tr:nth-child(even) td{background:var(--paper);}
+  table.d code{background:#fff;}
+  .pill{display:inline-block;font-family:'Geist Mono',monospace;font-size:11px;font-weight:500;padding:2px 8px;border-radius:6px;background:var(--lime);color:var(--olive-d);}
+  .schema{background:#1f2609;color:#e8edd4;border-radius:12px;padding:18px 20px;font-family:'Geist Mono',monospace;font-size:12.5px;line-height:1.6;overflow-x:auto;margin:12px 0 18px;white-space:pre;}
+  .schema .k{color:#c6e06a;}
+  .schema .c{color:#8a9568;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:14px 0;}
+  .tile{border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:var(--paper);}
+  .tile .n{font-family:'Bricolage Grotesque',sans-serif;font-weight:600;font-size:14.5px;margin-bottom:3px;}
+  .tile p{font-size:13px;color:var(--ink2);margin:0;}
+  .muted{color:var(--ink3);font-size:13px;}
+  hr{border:none;border-top:1px solid var(--line);margin:20px 0;}
+  @page{size:letter;margin:0;}
+  @media print{
+    html{-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+    html,body{margin:0;padding:0;}
+    .doc{max-width:none!important;margin:0!important;padding:0 0.75in!important;box-shadow:none!important;}
+    .pad-top,.pad-bottom{display:table-cell;height:0.7in;}
+    h1,h2,h3,h4{break-after:avoid;}
+    table,tr,.callout,.schema,.tile,figure{break-inside:avoid;}
+    p,li{orphans:3;widows:3;}
+  }
+</style>
+</head>
+<body>
+<main class="doc">
+<table class="doc-frame" role="presentation">
+<thead><tr><td class="pad-top"></td></tr></thead>
+<tbody><tr><td>
+
+<div class="kicker">Inventra · Developer Handoff</div>
+<h1>Backend Developer Guide</h1>
+<p class="lead">How to turn the Inventra frontend prototype into a working product — what to edit, which APIs to build, and where the database fits.</p>
+<p class="muted">Version 1.0 · Prepared for the backend engineer · Frontend file: <code>Inventra.dc.html</code></p>
+
+<h2>1. What you've been given</h2>
+<p>The deliverable is a <strong>high-fidelity frontend prototype</strong> — a single self-contained HTML file (<code>Inventra.dc.html</code>) plus two small runtime helpers (<code>support.js</code>, <code>image-slot.js</code>). It renders the complete UI and all screen flows (marketing site, auth, onboarding, and the full dashboard app) and is fully interactive.</p>
+<p>It is <strong>not yet wired to a backend</strong>. All data is mock/in-memory state held in the browser. Your job is to replace that mock state with real API calls and persistence. The visual layer, layout, states (loading, empty, error, success), and interactions are already designed — you should not need to redesign anything.</p>
+<div class="callout">
+<div class="t">The one rule</div>
+<p>Keep the screens, states, and flows as designed. Swap the <em>data source</em> underneath — don't rebuild the UI. Every empty state, loading skeleton and toast already exists for a reason.</p>
+</div>
+
+<h2>2. Recommended stack</h2>
+<p>The prototype targets this stack (you may substitute equivalents):</p>
+<table class="d">
+<thead><tr><th>Layer</th><th>Recommended</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>Framework</td><td>Next.js (App Router) + React + TypeScript</td><td>Rebuild the screens as components; the prototype is the visual spec.</td></tr>
+<tr><td>Styling</td><td>Tailwind CSS</td><td>Palette: olive <code>#799102</code>, lime <code>#EEFAB3</code>, white. Font: Bricolage Grotesque (display) + Hanken Grotesque (body).</td></tr>
+<tr><td>State</td><td>Zustand</td><td>Auth/session, active store, UI toggles.</td></tr>
+<tr><td>Data fetching</td><td>TanStack Query</td><td>All server data (products, suppliers, scans…). Handles caching, retries, loading/error states.</td></tr>
+<tr><td>Database</td><td>PostgreSQL + Prisma (or Supabase)</td><td>Relational fits this domain well. Supabase also gives you auth + storage + row-level security fast.</td></tr>
+<tr><td>File storage</td><td>S3 / Supabase Storage</td><td>Uploaded invoice PDFs/images before &amp; after OCR.</td></tr>
+<tr><td>OCR / AI</td><td>Google Document AI, AWS Textract, or an LLM vision model</td><td>The signature feature. See §7.</td></tr>
+<tr><td>Charts</td><td>Recharts</td><td>Prototype draws simple SVG charts; swap for Recharts fed by real aggregates.</td></tr>
+</tbody>
+</table>
+
+<h2>3. How the frontend is organized</h2>
+<p>Everything lives in <code>Inventra.dc.html</code>. Two things orient you:</p>
+<ul>
+<li><strong>Stages</strong> — a top-level <code>stage</code> value switches between <code>home</code> (marketing), the auth screens (<code>login</code>, <code>register</code>, <code>forgot</code>, <code>onboarding</code>), and <code>app</code> (the dashboard).</li>
+<li><strong>Routes</strong> — inside the app, <code>route</code> selects the page: <code>dashboard, inventory, scan, ocr, analytics, alerts, suppliers, employees, reports, billing, settings</code>.</li>
+</ul>
+<p>All mock data and handlers are produced in one place: the <code>renderVals()</code> method of the logic class. Search these markers to find what to replace:</p>
+<table class="d">
+<thead><tr><th>In the prototype</th><th>Replace with</th></tr></thead>
+<tbody>
+<tr><td><code>this._products = []</code> and the <code>get products()</code> getter</td><td>A products query for the active store (TanStack Query → <code>GET /api/products</code>).</td></tr>
+<tr><td><code>_saveProduct()</code></td><td><code>POST /api/products</code> then invalidate the products query.</td></tr>
+<tr><td><code>_startScan()</code> / <code>confirmImport()</code></td><td>Real upload + OCR job + bulk import (see §7).</td></tr>
+<tr><td><code>_buildOcr()</code> and the OCR rows</td><td>Extraction results fetched for a given scan/document id.</td></tr>
+<tr><td><code>doLogin / doRegister / doForgot</code></td><td>Auth endpoints; store a session/JWT.</td></tr>
+<tr><td>Metric values, <code>revenueCards</code>, charts</td><td>Aggregation endpoints (see §6).</td></tr>
+<tr><td>Empty <code>suppliers</code>, <code>alerts</code>, <code>employees</code> arrays</td><td>Their respective list endpoints.</td></tr>
+</tbody>
+</table>
+<div class="callout">
+<div class="t">Good news</div>
+<p>The app already treats a brand-new account as <strong>empty</strong> (no seeded data) with proper empty states. So a fresh user hitting real, empty endpoints will look correct from day one.</p>
+</div>
+
+<h2>4. Database — the core tables</h2>
+<p>Inventra is <strong>multi-tenant by store</strong>: a user (owner) can have one or more stores, and almost every record belongs to a <code>store_id</code>. Scope every query by the active store, and enforce it server-side.</p>
+<div class="schema"><span class="c">-- core identity &amp; tenancy</span>
+<span class="k">users</span>        (id, full_name, email, password_hash, created_at)
+<span class="k">stores</span>       (id, owner_user_id → users, name, country, currency,
+              tax_system, logo_url, accent_color, created_at)
+<span class="k">memberships</span>  (id, user_id → users, store_id → stores,
+              role <span class="c">-- 'admin' | 'manager' | 'cashier'</span>,
+              permission_level, created_at)
+
+<span class="c">-- catalog &amp; inventory</span>
+<span class="k">suppliers</span>    (id, store_id → stores, name, phone, email,
+              total_purchases, last_purchase_at)
+<span class="k">products</span>     (id, store_id → stores, barcode, name, category,
+              supplier_id → suppliers, cost_price, sell_price,
+              quantity, reorder_threshold, created_at, updated_at)
+
+<span class="c">-- scanning &amp; OCR pipeline</span>
+<span class="k">documents</span>    (id, store_id → stores, uploaded_by → users,
+              file_url, type <span class="c">-- 'invoice' | 'eod_report'</span>,
+              status <span class="c">-- 'uploaded'|'processing'|'extracted'|'imported'</span>,
+              created_at)
+<span class="k">ocr_lines</span>    (id, document_id → documents, detected_text,
+              matched_product_id → products, detected_quantity,
+              confidence, state <span class="c">-- 'pending'|'approved'|'rejected'</span>)
+
+<span class="c">-- movements, alerts, billing</span>
+<span class="k">stock_moves</span>  (id, store_id, product_id → products, delta,
+              reason <span class="c">-- 'scan_import'|'sale'|'manual'|'reorder'</span>,
+              source_document_id → documents, created_at)
+<span class="k">sales</span>        (id, store_id, product_id → products, quantity,
+              unit_price, sold_at)
+<span class="k">alerts</span>       (id, store_id, type, severity, product_id → products,
+              message, status <span class="c">-- 'active'|'dismissed'</span>, created_at)
+<span class="k">subscriptions</span>(id, store_id, plan, status, renews_at)
+<span class="k">invoices</span>     (id, store_id, amount, status, issued_at, pdf_url)</div>
+
+<div class="callout warn">
+<div class="t">Don't store computed stock as the only source of truth</div>
+<p>Prefer recording <strong>stock movements</strong> (<code>stock_moves</code>) and deriving <code>products.quantity</code> from them (or keep <code>quantity</code> as a cache you update in the same transaction). This gives you an audit trail — essential when an OCR import is later corrected or undone.</p>
+</div>
+
+<h2>5. Where the database is actually needed</h2>
+<p>Not every screen needs its own tables. Here's where persistence is required vs. computed on the fly:</p>
+<div class="grid2">
+<div class="tile"><div class="n">Needs tables (persist)</div><p>Products, suppliers, employees/memberships, documents, ocr_lines, stock_moves, sales, alerts, subscriptions, invoices, stores, users.</p></div>
+<div class="tile"><div class="n">Computed / aggregated</div><p>Dashboard metrics, revenue/sales/expense/profit charts, low-stock lists, analytics cards. Derive these with SQL aggregates — don't store them.</p></div>
+<div class="tile"><div class="n">Store-scoped (always filter)</div><p>Everything except <code>users</code>. Add <code>store_id</code> to every query and enforce membership server-side (row-level security if using Supabase).</p></div>
+<div class="tile"><div class="n">Files (object storage, not DB)</div><p>Uploaded invoice PDFs/images and generated report/invoice PDFs. Store only the URL in the DB.</p></div>
+</div>
+
+<h2>6. API endpoints per screen</h2>
+<table class="d">
+<thead><tr><th>Screen</th><th>Endpoints</th></tr></thead>
+<tbody>
+<tr><td>Auth / Onboarding</td><td><code>POST /auth/register</code>, <code>POST /auth/login</code>, <code>POST /auth/forgot</code>, <code>POST /stores</code> (create store + accent/logo)</td></tr>
+<tr><td>Dashboard</td><td><code>GET /stores/:id/metrics</code>, <code>GET /stores/:id/revenue?range=7d</code>, <code>GET /products?status=low</code></td></tr>
+<tr><td>Inventory</td><td><code>GET /products?search=&amp;category=&amp;page=</code>, <code>POST /products</code>, <code>PATCH /products/:id</code>, <code>DELETE /products/:id</code>, <code>GET /products/export.csv</code></td></tr>
+<tr><td>Scan</td><td><code>POST /documents</code> (upload → returns id), <code>GET /documents/:id</code> (poll status)</td></tr>
+<tr><td>OCR verification</td><td><code>GET /documents/:id/lines</code>, <code>PATCH /ocr-lines/:id</code>, <code>POST /documents/:id/import</code> (apply approved lines → stock_moves)</td></tr>
+<tr><td>Analytics</td><td><code>GET /stores/:id/analytics?metric=revenue|expenses|profit&amp;range=</code></td></tr>
+<tr><td>Alerts</td><td><code>GET /alerts?status=active</code>, <code>PATCH /alerts/:id</code> (dismiss), <code>POST /alerts/:id/reorder</code></td></tr>
+<tr><td>Suppliers</td><td><code>GET/POST/PATCH/DELETE /suppliers</code></td></tr>
+<tr><td>Employees</td><td><code>GET /memberships</code>, <code>POST /memberships</code> (invite), <code>PATCH /memberships/:id</code> (role/permissions)</td></tr>
+<tr><td>Reports</td><td><code>POST /reports</code> (type + date range → generates PDF/Excel/CSV → returns file url)</td></tr>
+<tr><td>Billing</td><td><code>GET /subscription</code>, <code>POST /subscription</code> (change plan), <code>GET /invoices</code> (via Stripe or similar)</td></tr>
+<tr><td>Settings</td><td><code>PATCH /users/me</code>, <code>PATCH /stores/:id</code> (name, country, currency, tax, accent, AI toggles, notification prefs)</td></tr>
+</tbody>
+</table>
+
+<h2>7. The OCR / scan pipeline (the signature feature)</h2>
+<p>This is the heart of Inventra. Build it as an asynchronous job so the UI can show the upload → processing → extracted states the prototype already renders.</p>
+<ol>
+<li><strong>Upload</strong> — <code>POST /documents</code> stores the file in object storage, creates a <code>documents</code> row with <code>status='uploaded'</code>, and enqueues an OCR job. Return the document id immediately.</li>
+<li><strong>Extract</strong> — the worker sends the file to your OCR provider, parses line items (name, quantity, price), and writes one <code>ocr_lines</code> row per detected item with a <strong>confidence score</strong>. Set <code>status='extracted'</code>.</li>
+<li><strong>Match</strong> — for each line, fuzzy-match <code>detected_text</code> against existing <code>products</code> (barcode first, then name similarity). Store the best match + confidence. Lines below ~80% confidence are flagged for review — the UI already shows this.</li>
+<li><strong>Verify</strong> — the user approves/edits/rejects lines on the OCR screen (<code>PATCH /ocr-lines/:id</code>).</li>
+<li><strong>Import</strong> — <code>POST /documents/:id/import</code> applies only approved lines: create/increment products and write <code>stock_moves</code> in one transaction, set <code>status='imported'</code>.</li>
+</ol>
+<div class="callout">
+<div class="t">Confidence threshold</div>
+<p>The UI treats <strong>&lt; 80%</strong> as "needs review". Keep this configurable per store (there's already an <em>Auto product detection</em> toggle in Settings → AI that should gate auto-matching).</p>
+</div>
+
+<h2>8. Practical tips &amp; gotchas</h2>
+<ul>
+<li><strong>Multi-store from day one.</strong> Even a single-store owner should go through the <code>stores</code> table. It saves a painful migration later.</li>
+<li><strong>Idempotent imports.</strong> A user may retry a failed import — key it by <code>document_id</code> so lines aren't applied twice.</li>
+<li><strong>Undo delete.</strong> The UI offers "Undo" on delete toasts. Implement soft-deletes (<code>deleted_at</code>) so undo is trivial.</li>
+<li><strong>Barcodes aren't unique globally.</strong> They're unique <em>per store</em> — put the unique constraint on <code>(store_id, barcode)</code>.</li>
+<li><strong>Currency &amp; tax are per store.</strong> Format money on the client using the store's currency; store raw numeric values (never formatted strings) in the DB.</li>
+<li><strong>Roles.</strong> Admin / Manager / Cashier already appear in the UI — enforce them server-side, not just by hiding buttons.</li>
+<li><strong>Autosave drafts.</strong> The Add-Product form autosaves a draft locally; you can keep that client-side or persist a <code>draft</code> per user.</li>
+<li><strong>Accent color &amp; logo</strong> are per-store branding chosen at onboarding — persist on <code>stores</code> and return them with the session so the app themes itself.</li>
+</ul>
+
+<hr>
+<p class="muted">Questions on intended behavior for any screen? The prototype is the reference — open <code>Inventra.dc.html</code> and click through the exact flow before implementing it. Every state you need to support is already visible there.</p>
+
+</td></tr></tbody>
+<tfoot><tr><td class="pad-bottom"></td></tr></tfoot>
+</table>
+</main>
+</body>
+</html>
